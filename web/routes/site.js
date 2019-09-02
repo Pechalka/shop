@@ -24,19 +24,7 @@ router.use(function (req, res, next) {
 });
 
 
-router.get('/', (req, res) => {
-	var cart = new Cart(req.session.cart ? req.session.cart : {});
-	db.getProducts().then(function(products) {
-		res.render('home', { products, cart: cart.toView(), categories: req.categories });
-	});
-})
 
-router.get('/:categoryName', (req, res) => {
-	var cart = new Cart(req.session.cart ? req.session.cart : {});
-	db.getProducts().then(function(products) {
-		res.render('home', { products, cart: cart.toView(), categories: req.categories });
-	});
-})
 
 router.get('/vacancy', (req, res) => {
 	var cart = new Cart(req.session.cart ? req.session.cart : {});
@@ -68,6 +56,23 @@ router.post('/order', (req, res) => {
 	})
 })
 
+router.post('/order.json', (req, res) => {
+	var cart = new Cart(req.session.cart ? req.session.cart : {});
+	var customerName = req.body.customerName;
+	var phone = req.body.phone;
+	var address = req.body.address;
+
+	db.createOrder(cart, customerName, phone, address).then((orderId) => {
+		cart.clean();
+		req.session.cart = cart;
+
+		res.json({
+			cart: cart.toView(),
+			text: req.content['order_created']
+		});
+	})
+})
+
 router.post('/add-item', function(req, res) {
 	var id = req.body.id;
 	var cart = new Cart(req.session.cart ? req.session.cart : {});
@@ -75,6 +80,26 @@ router.post('/add-item', function(req, res) {
 		cart.add(product, product.id);
 		req.session.cart = cart;
 		res.redirect('/');
+	})
+})
+
+router.post('/add-item.json', function(req, res) {
+	var id = req.body.id;
+	var cart = new Cart(req.session.cart ? req.session.cart : {});
+	db.getProductById(id).then(product => {
+		cart.add(product, product.id);
+		req.session.cart = cart;
+		res.json(req.session.cart.toView());
+	})
+})
+
+router.post('/remove-item.json', function(req, res) {
+	var id = req.body.id;
+	var cart = new Cart(req.session.cart ? req.session.cart : {});
+	db.getProductById(id).then(product => {
+		cart.remove(product, product.id);
+		req.session.cart = cart;
+		res.json(req.session.cart.toView());
 	})
 })
 
@@ -100,5 +125,19 @@ router.post('/order/remove', (req, res) => {
 	})
 })
 
+
+router.get('/', (req, res) => {
+	var cart = new Cart(req.session.cart ? req.session.cart : {});
+	db.getProducts().then(function(products) {
+		res.render('home', { products, cart: cart.toView(), categories: req.categories });
+	});
+})
+
+router.get('/:categoryName', (req, res) => {
+	var cart = new Cart(req.session.cart ? req.session.cart : {});
+	db.getProducts().then(function(products) {
+		res.render('home', { products, cart: cart.toView(), categories: req.categories });
+	});
+})
 
 module.exports = router;

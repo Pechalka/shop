@@ -15,9 +15,41 @@
   
   <div class="card">
     <span>Корзина:</span>
-    <span><%- cart.totalPrice %></span>
-    <% if (cart.totalPrice> 0 ) { %>
-    <a href="/order">Оформить</a>
-    <% } %>
+    <span class="js-total-price"><%- cart.totalPrice %></span>
+    <a style="display: <%- cart.totalPrice > 0 ? 'block' : 'none' %>" class="js-cart-order-btn" href="/order">Оформить</a>
   </div>
 </div>
+
+<script>
+
+var totapPrice = document.querySelector('.js-total-price');
+var orderBtn = document.querySelector('.js-cart-order-btn');
+
+var menuItems = document.querySelectorAll('.menu1 a');
+
+appEvents.on('products:rendred', () => {
+  menuItems.forEach(function(menu){
+    menu.addEventListener('click', function(e) {
+      e.preventDefault();
+
+      var key = event.target.dataset.key;
+      
+      appEvents.emit('header:category-click', key);
+
+      history.pushState({}, null, event.target.href);
+    });
+  })  
+})
+
+
+appEvents.on('header:cart-change', (cart) => {
+  var totalPriceValue = cart.totalPrice;
+  totapPrice.innerHTML = totalPriceValue;
+  if (totalPriceValue > 0) {
+    orderBtn.style.display = 'block';
+  } else {
+    orderBtn.style.display = 'none';    
+  }
+})
+
+</script>

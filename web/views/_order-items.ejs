@@ -1,0 +1,83 @@
+<div class="js-order-items-container">
+  <h1>Оформление заказа</h1>
+  <div class="js-order-items">
+    <% cart.items.forEach(function(product){ %>
+    <div class="you-order__item">
+      <img width="50" src="<%- product.item.image %>">
+      <span class="you-order__item-title"><%- product.item.name %></span>
+      <div class="you-order__counter">
+        <form action="/order/add" method="POST">
+          <input name='id' type="hidden" value="<%- product.item.id %>" />
+          <button data-id="<%- product.item.id %>"  class="js-add-order you-order__counter-btn" type="submit">+</button>
+        </form>
+        <span><%- product.qty %></span>
+        <form action="/order/remove" method="POST">
+          <input name='id' type="hidden" value="<%- product.item.id %>" />
+          <button data-id="<%- product.item.id %>" class="js-remove-order you-order__counter-btn">-</button>
+        </form>
+      </div>
+    </div>
+    <% }); %>
+  </div>
+</div>
+
+<script>
+var itemsContainer = document.querySelector('.js-order-items');
+var container = document.querySelector('.js-order-items-container');
+
+function addListeners() {
+  var addButtons = document.querySelectorAll('.js-add-order')
+  addButtons.forEach(function(btn){
+    btn.addEventListener('click', function(e) {
+      e.preventDefault();
+
+      var id = event.target.dataset.id;
+
+      appEvents.emit('order-items:add', id);
+    });
+  }) 
+
+  var removeButtons = document.querySelectorAll('.js-remove-order');
+
+  removeButtons.forEach(function(btn){
+    btn.addEventListener('click', function(e) {
+      e.preventDefault();
+
+      var id = event.target.dataset.id;
+      appEvents.emit('order-items:remove', id);
+    });
+  }) 
+}
+
+addListeners();
+
+appEvents.on('order-items:cart-change', cart => {
+  var html = '';
+  cart.items.forEach(function(product){
+  html += '<div class="you-order__item">' + 
+      '<img width="50" src="' + product.item.image + '">' + 
+      '<span class="you-order__item-title">' + product.item.name + '</span>' +
+      '<div class="you-order__counter">' + 
+        '<form action="/order/add" method="POST">' +
+          '<input name="id" type="hidden" value="' + product.item.id + '" />' +
+          '<button data-id="' + product.item.id +'"  class="js-add-order you-order__counter-btn" type="submit">+</button>' +
+        '</form>' +
+        '<span>' + product.qty + '</span>' +
+        '<form action="/order/remove" method="POST">' +
+        '<input name="id" type="hidden" value="' + product.item.id + '" />' +
+          '<button data-id="' + product.item.id +'" class="js-remove-order you-order__counter-btn">-</button>' +
+        '</form>' +
+      '</div>' +
+    '</div>';
+  });
+
+  itemsContainer.innerHTML = html;
+  addListeners();
+})
+
+appEvents.on('order-items:hide', () => {
+  container.style.display = 'none';
+
+})
+
+</script>

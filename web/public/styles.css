@@ -249,6 +249,10 @@ body {
     box-sizing: border-box;
 }
 
+.order-address__control--error {
+	border: 1px solid red;
+}
+
 .order-address__control {
 	padding-bottom: 20px;
 }

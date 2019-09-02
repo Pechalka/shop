@@ -1,0 +1,96 @@
+<div class="order-address js-order-form-container">
+  <h2 class="order-address__title">Адрес доставки</h2>
+  <form class="js-order-form" action="/order" method="POST">
+    <div class="order-address__control">
+      <p class="order-address__label">Имя</p>
+      <input class="js-field js-order-name" name='customerName' type="text" />
+    </div>
+    <div class="order-address__control">
+      <p class="order-address__label">Телефон</p>
+      <input class="js-field js-order-phone" name='phone' type="text" />
+    </div>
+    <div class="order-address__control">
+      <p class="order-address__label">Адрес</p>
+      <textarea class="js-field js-order-address" name='address' rows="4"></textarea>
+    </div>
+    <div class="order-address__btn-container">
+      <button class="order-address__btn" type="submit">оформить</button>
+    </div>
+  </form>
+</div>
+
+<script>
+var orderForm = document.querySelector('.js-order-form');
+
+var nameInput = document.querySelector('.js-order-name');
+var phoneInput = document.querySelector('.js-order-phone');
+var addressInput = document.querySelector('.js-order-address');
+var orderFormContainer = document.querySelector('.js-order-form-container');
+
+var fields = orderForm.querySelectorAll('.js-field')
+
+fields.forEach(field => {
+  field.addEventListener("blur", e => {
+    var currentField = event.target;
+    if (currentField.value) {
+      currentField.classList.remove('order-address__control--error');
+      if (currentField.previousSibling && 
+        currentField.previousSibling.classList &&
+        currentField.previousSibling.classList.contains('error')) {
+        currentField.previousSibling.remove();
+      }
+    }
+  });
+})
+
+var removeValidation = function () {
+  var errors = orderForm.querySelectorAll('.error')
+
+  for (var i = 0; i < errors.length; i++) {
+    errors[i].remove()
+  }
+}
+
+var generateError = function (text) {
+  var error = document.createElement('div')
+  error.className = 'error'
+  error.style.color = 'red'
+  error.innerHTML = text
+  return error
+}
+
+orderForm.addEventListener('submit', function(e) {
+  e.preventDefault();
+
+  removeValidation();
+
+  var hasErrors = false;
+  for (var i = 0; i < fields.length; i++) {
+    fields[i].classList.remove('order-address__control--error');
+    if (!fields[i].value){
+      hasErrors = true;
+
+      fields[i].classList.add('order-address__control--error');
+
+      var error = generateError('Необходимо заполнить')
+      orderForm[i].parentElement.insertBefore(error, fields[i])
+    }
+  }
+
+  if (hasErrors) return;
+
+  var order = {
+    customerName: nameInput.value,
+    phone: phoneInput.value,
+    address: addressInput.value
+  }
+
+  appEvents.emit('order-form:sumbit', order);
+});
+
+
+appEvents.on('order-form:show-result', text => {
+  orderFormContainer.innerHTML = text;
+})
+
+</script>

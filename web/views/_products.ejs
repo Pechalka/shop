@@ -1,0 +1,66 @@
+<% 
+    categories.forEach(function(category){ 
+      var productsInCategory = products.filter(p => p.category_id === category.id);     
+      if (productsInCategory.length == 0) return; 
+    %>
+
+    <div id="<%- category.key %>">
+      <h2 class="category-title"><%- category.name %></h2>
+      <div class="products-list">
+        <% productsInCategory.forEach(function(product){ %>
+          <div class="products-list__item" >
+            <div class="product">            
+              <div class="product__image-wrapper">
+                <img class="product__image" src="<%- product.image %>"/>
+              </div>
+              <div class="product__name"><%- product.name %></div>
+              <div class="product__price-order">
+                <div class="product__price"><%- product.price %></div>
+                <div class="product__order">
+                  <form action="/add-item" method="POST">
+                    <input type="hidden" name="id" value="<%- product.id %>">
+                    <button data-id="<%- product.id %>" class="js-order-product product__order-btn" type="submit">заказать</button>
+                  </form>
+                </div>
+              </div>
+              <div class="product__description">
+                <%- product.descrition %>
+              </div>
+            </div>
+          </div>
+        <% 
+      }); 
+      %>
+      </div>
+    <div>
+  <% }); %>
+
+<script>
+function scrollToSection(key) {
+  var section = document.getElementById(key);
+  if (section) {
+    section.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  }
+}
+
+  var orderButtons = document.querySelectorAll('.js-order-product');
+  orderButtons.forEach(function(button){
+    button.addEventListener('click', function(e) {
+      e.preventDefault();
+
+      var id = event.target.dataset.id;
+
+      appEvents.emit('products:add-item', id);
+    });
+  })
+
+  appEvents.on('header:category-click', (key) => {
+    scrollToSection(key);
+  })
+
+  appEvents.emit('products:rendred');
+
+  var key = window.location.pathname.replace('/', '');
+  scrollToSection(key);
+
+</script>

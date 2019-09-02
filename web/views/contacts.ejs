@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>web shop</title>
+	<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+	<%- include('_header', { cart, categories }); %>
+
+	<div class="content">
+		<div class="input-text">
+
+		<%- content['contacts_top'] %>
+
+		<div id="map" class="map">
+		</div>
+ <script src="https://api-maps.yandex.ru/2.1/?apikey=5d051c36-3521-451f-8945-4b544cc5b2d6&lang=ru_RU" type="text/javascript">
+    </script>
+<script type="text/javascript" src="map.js">
+</script>	
+
+		<%- content['order_created'] %>
+
+		</div>
+	</div>
+
+
+
+</body>
+</html>

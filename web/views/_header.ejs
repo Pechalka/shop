@@ -1,0 +1,23 @@
+<div class='header'>
+  <a class='logo' href='/'>Суппер Пицца</a>
+
+  <div>
+    <ul class='menu1'>
+      <% categories.forEach(function(category){ %>
+        <li><a data-key="<%- category.key %>" href="/<%- category.key %>"><%- category.name %></a></li>
+      <% }); %>
+    </ul>
+    <ul class='menu2'>
+      <li><a href="/contacts">Контакты</a></li>
+      <li><a href="/vacancy">Вакансии</a></li>
+    </ul>
+  </div>
+  
+  <div class="card">
+    <span>Корзина:</span>
+    <span><%- cart.totalPrice %></span>
+    <% if (cart.totalPrice> 0 ) { %>
+    <a href="/order">Оформить</a>
+    <% } %>
+  </div>
+</div>

@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>web shop</title>
+	<link rel="stylesheet" href="../styles.css">
+</head>
+<body>
+	<div class='header'>
+		<a class='logo' href='/html'>Суппер Пицца</a>
+
+		<div>
+			<ul class='menu1'>
+				<li><a href="/html">Пица</a></li>
+				<li><a href="/html">Напитки</a></li>
+				<li><a href="/html">Дисерты</a></li>
+			</ul>
+			<ul class='menu2'>
+				<li><a href="contacts.html">Зона лоставки</a></li>
+				<li><a href="vacancy.html">Вакансии</a></li>
+			</ul>
+		</div>
+		
+		<div class="card">
+			<span>Корзина:</span>
+			<span>18.90</span>
+			<a href='order.html'>Оформить</a>
+		</div>
+	</div>
+
+
+	<div class="content">
+		<h1>Оформление заказа</h1>
+
+		<div class="you-order">
+			<h2 class="you-order__title">Ваш заказ</h2>
+			<div>
+				<div class="you-order__item">
+					<img width="50" src="http://localhost:5000/uploads/5875b8cf-ef27-4292-b9cc-7000d55f0e86.jpg">
+					<span class="you-order__item-title">Пица Мясная</span>
+					<div class="you-order__counter">
+						<button class="you-order__counter-btn">+</button>
+						<span>1</span>
+						<button class="you-order__counter-btn">-</button>
+					</div>
+				</div>
+				<div class="you-order__item">
+					<img width="50" src="http://localhost:5000/uploads/5875b8cf-ef27-4292-b9cc-7000d55f0e86.jpg">
+					<span class="you-order__item-title">Пица Мясная</span>
+					<div class="you-order__counter">
+						<button class="you-order__counter-btn">+</button>
+						<span>1</span>
+						<button class="you-order__counter-btn">-</button>
+					</div>
+				</div>
+				<div class="you-order__item">
+					<img width="50" src="http://localhost:5000/uploads/5875b8cf-ef27-4292-b9cc-7000d55f0e86.jpg">
+					<span class="you-order__item-title">Буженина и сливочный сыр</span>
+					<div class="you-order__counter">
+						<button class="you-order__counter-btn">+</button>
+						<span>1</span>
+						<button class="you-order__counter-btn">-</button>
+					</div>
+				</div>
+			</div>
+		</div>
+		
+		<div class="order-address">
+			<h2 class="order-address__title">Адрес доставки</h2>
+			<form action="order-create.html" method="GET">
+				<div class="order-address__control">
+					<p class="order-address__label">Имя</p>
+					<input  type="text" />
+				</div>
+				<div class="order-address__control">
+					<p class="order-address__label">Телефон</p>
+					<input  type="text" />
+				</div>
+				<div class="order-address__control">
+					<p class="order-address__label">Адрес</p>
+					<textarea rows="4"></textarea>
+				</div>
+				<div class="order-address__btn-container">
+					<button class="order-address__btn" type="submit">оформить</button>
+				</div>
+			</form>
+		</div>
+
+	</div>
+</body>
+</html>

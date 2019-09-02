@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>web shop</title>
+  <link rel="stylesheet" href="styles.css">
+  <script src="home.js"></script>
+</head>
+<body>
+  <%- include('_header', { cart, categories }); %>
+
+  <div class="content">
+    <% 
+    categories.forEach(function(category){ 
+      var productsInCategory = products.filter(p => p.category_id === category.id);     
+      if (productsInCategory.length == 0) return; 
+    %>
+
+    <div id="<%- category.key %>">
+      <h2 class="category-title"><%- category.name %></h2>
+      <div class="products-list">
+        <% productsInCategory.forEach(function(product){ %>
+          <div class="products-list__item" >
+            <div class="product">            
+              <div class="product__image-wrapper">
+                <img class="product__image" src="<%- product.image %>"/>
+              </div>
+              <div class="product__name"><%- product.name %></div>
+              <div class="product__price-order">
+                <div class="product__price"><%- product.price %></div>
+                <div class="product__order">
+                  <form action="/add-item" method="POST">
+                    <input type="hidden" name="id" value="<%- product.id %>">
+                    <button class="product__order-btn" type="submit">заказать</button>
+                  </form>
+                </div>
+              </div>
+              <div class="product__description">
+                <%- product.descrition %>
+              </div>
+            </div>
+          </div>
+        <% 
+      }); 
+      %>
+      </div>
+    <div>
+  <% }); %>
+  <div>
+</body>
+</html>

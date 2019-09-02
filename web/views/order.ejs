@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>web shop</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <%- include('_header', { cart, categories }); %>
+  
+  <div class="content">
+    <h1>Оформление заказа</h1>
+    <div>
+      <% cart.items.forEach(function(product){ %>
+      <div class="you-order__item">
+        <img width="50" src="<%- product.item.image %>">
+        <span class="you-order__item-title"><%- product.item.name %></span>
+        <div class="you-order__counter">
+          <form action="/order/add" method="POST">
+            <input name='id' type="hidden" value="<%- product.item.id %>" />
+            <button class="you-order__counter-btn" type="submit">+</button>
+          </form>
+          <span><%- product.qty %></span>
+          <form action="/order/remove" method="POST">
+            <input name='id' type="hidden" value="<%- product.item.id %>" />
+            <button class="you-order__counter-btn">-</button>
+          </form>
+        </div>
+      </div>
+      <% }); %>
+    </div>
+    
+    <div class="order-address">
+      <h2 class="order-address__title">Адрес доставки</h2>
+      <form action="/order" method="POST">
+        <div class="order-address__control">
+          <p class="order-address__label">Имя</p>
+          <input name='customerName' type="text" />
+        </div>
+        <div class="order-address__control">
+          <p class="order-address__label">Телефон</p>
+          <input name='phone' type="text" />
+        </div>
+        <div class="order-address__control">
+          <p class="order-address__label">Адрес</p>
+          <textarea name='address' rows="4"></textarea>
+        </div>
+        <div class="order-address__btn-container">
+          <button class="order-address__btn" type="submit">оформить</button>
+        </div>
+      </form>
+    </div>
+
+  </div>
+
+</div>
+
+</div>
+</body>
+</html>

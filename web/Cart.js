@@ -10,6 +10,8 @@ function Cart(oldCart) {
 		this.items[id].qty++;
 		this.totalQty++;
 		this.totalPrice += product.price;
+
+		this.totalPrice = +this.totalPrice.toFixed(2);
 	}
 
 	this.remove =  function(product, id) {
@@ -19,6 +21,7 @@ function Cart(oldCart) {
 		this.items[id].qty--;
 		this.totalQty--;
 		this.totalPrice -= product.price;
+		this.totalPrice = +this.totalPrice.toFixed(2);
 		if (this.items[id].qty === 0) {
 			delete this.items[id];
 		}

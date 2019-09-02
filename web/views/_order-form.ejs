@@ -14,12 +14,13 @@
       <textarea class="js-field js-order-address" name='address' rows="4"></textarea>
     </div>
     <div class="order-address__btn-container">
-      <button class="order-address__btn" type="submit">оформить</button>
+      <button <%- cart.items.length === 0 && 'disabled'  %> class="js-order-submit-btn order-address__btn" type="submit">оформить</button>
     </div>
   </form>
 </div>
 
 <script>
+var orderSubmitBtn = document.querySelector('.js-order-submit-btn');
 var orderForm = document.querySelector('.js-order-form');
 
 var nameInput = document.querySelector('.js-order-name');
@@ -91,6 +92,10 @@ orderForm.addEventListener('submit', function(e) {
 
 appEvents.on('order-form:show-result', text => {
   orderFormContainer.innerHTML = text;
+})
+
+appEvents.on('order-form:cart-change', cart => {
+  orderSubmitBtn.disabled = cart.items.length === 0 ;
 })
 
 </script>

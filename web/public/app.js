@@ -47,6 +47,7 @@ appEvents.on('order-items:add', (id) => {
     addProduct(id).then(cart => {
         appEvents.emit('header:cart-change', cart)
         appEvents.emit('order-items:cart-change', cart);
+        appEvents.emit('order-form:cart-change', cart);
     })
 })
 
@@ -54,6 +55,7 @@ appEvents.on('order-items:remove', (id) => {
     removeProduct(id).then(cart => {
         appEvents.emit('header:cart-change', cart)
         appEvents.emit('order-items:cart-change', cart);
+        appEvents.emit('order-form:cart-change', cart);
     })
 })
 

@@ -91,7 +91,11 @@ orderForm.addEventListener('submit', function(e) {
 
 
 appEvents.on('order-form:show-result', text => {
-  orderFormContainer.innerHTML = text;
+  orderFormContainer.innerHTML = `
+    <div class="input-text">
+      ${text}
+    </div>
+  `;
 })
 
 appEvents.on('order-form:cart-change', cart => {

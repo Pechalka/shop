@@ -2,18 +2,17 @@ var express = require('express');
 var router = express.Router();
 
 var db = require('../db');
-
 var Cart = require('../Cart');
 
 router.use(function (req, res, next) {
-	db.getCategories().then((categories) => {
+	db.categories.getAll().then((categories) => {
 		req.categories = categories;
 		next();
 	});
 });
 
 router.use(function (req, res, next) {
-	db.getContents().then((contents) => {
+	db.contents.getAll().then((contents) => {
 		var content = {};
 		contents.forEach(c => {
 			content[c.key] = c.value;
@@ -22,8 +21,6 @@ router.use(function (req, res, next) {
 		next();
 	});
 });
-
-
 
 
 router.get('/vacancy', (req, res) => {
@@ -42,9 +39,9 @@ router.get('/order', (req, res) => {
 	res.render('order', { cart: cart.toView(), categories: req.categories });
 })
 
-
-router.post('/order', (req, res) => {
+function createOrder(req, res, next) {
 	var cart = new Cart(req.session.cart ? req.session.cart : {});
+	req.cart = cart;
 	var customerName = req.body.customerName;
 	var phone = req.body.phone;
 	var address = req.body.address;
@@ -52,92 +49,76 @@ router.post('/order', (req, res) => {
 	db.createOrder(cart, customerName, phone, address).then((orderId) => {
 		cart.clean();
 		req.session.cart = cart;
-		res.render('order-create', { orderId, cart: cart.toView(), categories: req.categories, content: req.content });
+		req.orderId = orderId;
+		next();
 	})
+}
+
+router.post('/order', createOrder, (req, res) => {
+	res.render('order-create', { 
+		orderId: req.orderId, 
+		cart: req.cart.toView(), 
+		categories: req.categories, 
+		content: req.content 
+	});
 })
 
-router.post('/order.json', (req, res) => {
+router.post('/order.json', createOrder, (req, res) => {
+	res.json({
+		cart: req.cart.toView(),
+		text: req.content['order_created']
+	});
+})
+
+
+function addProduct(req, res, next) {
+	var id = req.body.id;
 	var cart = new Cart(req.session.cart ? req.session.cart : {});
-	var customerName = req.body.customerName;
-	var phone = req.body.phone;
-	var address = req.body.address;
-
-	db.createOrder(cart, customerName, phone, address).then((orderId) => {
-		cart.clean();
+	db.products.getById(id).then(product => {
+		cart.add(product, product.id);
 		req.session.cart = cart;
-
-		res.json({
-			cart: cart.toView(),
-			text: req.content['order_created']
-		});
-	})
-})
+		next()
+	})	
+}
 
 router.post('/add-item', function(req, res) {
-	var id = req.body.id;
-	var cart = new Cart(req.session.cart ? req.session.cart : {});
-	db.getProductById(id).then(product => {
-		cart.add(product, product.id);
-		req.session.cart = cart;
-		res.redirect('/');
-	})
+	res.redirect('/');
 })
 
-router.post('/add-item.json', function(req, res) {
-	var id = req.body.id;
-	var cart = new Cart(req.session.cart ? req.session.cart : {});
-	db.getProductById(id).then(product => {
-		cart.add(product, product.id);
-		req.session.cart = cart;
-		res.json(req.session.cart.toView());
-	})
+router.post('/add-item.json', addProduct, function(req, res) {
+	res.json(req.session.cart.toView());
 })
 
-router.post('/remove-item.json', function(req, res) {
+router.post('/order/add', addProduct, function(req, res) {
+	res.redirect('/order');
+})
+
+function removeProduct(req, res, next) {
 	var id = req.body.id;
 	var cart = new Cart(req.session.cart ? req.session.cart : {});
-	db.getProductById(id).then(product => {
+	db.products.getById(id).then(product => {
 		cart.remove(product, product.id);
 		req.session.cart = cart;
-		res.json(req.session.cart.toView());
+		next();
 	})
+}
+
+router.post('/remove-item.json', removeProduct, function(req, res) {
+	res.json(req.session.cart.toView());
 })
 
-
-
-router.post('/order/add', (req, res) => {
-	var id = req.body.id;
-	var cart = new Cart(req.session.cart ? req.session.cart : {});
-	db.getProductById(id).then(product => {
-		cart.add(product, product.id);
-		req.session.cart = cart;
-		res.redirect('/order');
-	})
+router.post('/order/remove', removeProduct, (req, res) => {
+	res.redirect('/order');
 })
 
-router.post('/order/remove', (req, res) => {
-	var id = req.body.id;
+function renderHomePage(req, res) {
 	var cart = new Cart(req.session.cart ? req.session.cart : {});
-	db.getProductById(id).then(product => {
-		cart.remove(product, product.id);
-		req.session.cart = cart;
-		res.redirect('/order');
-	})
-})
-
-
-router.get('/', (req, res) => {
-	var cart = new Cart(req.session.cart ? req.session.cart : {});
-	db.getProducts().then(function(products) {
+	db.products.getAll().then(function(products) {
 		res.render('home', { products, cart: cart.toView(), categories: req.categories });
 	});
-})
+}
 
-router.get('/:categoryName', (req, res) => {
-	var cart = new Cart(req.session.cart ? req.session.cart : {});
-	db.getProducts().then(function(products) {
-		res.render('home', { products, cart: cart.toView(), categories: req.categories });
-	});
-})
+router.get('/', renderHomePage)
+router.get('/:categoryName', renderHomePage)
 
 module.exports = router;

@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "html": "browser-sync start -s  \"./public\" --files=\"**/*\" --startPath \"html\"",
+    "html": "start-storybook",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "",
@@ -18,5 +18,10 @@
     "multer": "^1.4.2",
     "sqlite3": "^4.0.9",
     "uuid": "^3.3.2"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.5.5",
+    "@storybook/html": "^5.1.11",
+    "babel-loader": "^8.0.6"
   }
 }

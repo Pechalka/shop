@@ -1,6 +1,7 @@
 import React from 'react';
 import axios from 'axios';
 import moment from 'moment';
+import { ROOT_URL } from './config';
 
 class OrdersInfo extends React.Component{
 	state = {
@@ -11,7 +12,7 @@ class OrdersInfo extends React.Component{
 	}
 
 	componentDidMount() {
-		axios.get(`http://localhost:5000/api/orders/${this.props.match.params.id}`)
+		axios.get(`${ROOT_URL}/api/orders/${this.props.match.params.id}`)
 			.then(responce => responce.data)
 			.then(order => {
 				this.setState({ order, items: order.items })
@@ -19,7 +20,7 @@ class OrdersInfo extends React.Component{
 	}
 
 	confirm = () => {
-		axios.put(`http://localhost:5000/api/orders/${this.props.match.params.id}`, { orderStatus: 'confirm' })
+		axios.put(`${ROOT_URL}/api/orders/${this.props.match.params.id}`, { orderStatus: 'confirm' })
 		.then(() => {
 			this.props.history.push('/orders');
 		})
@@ -27,7 +28,7 @@ class OrdersInfo extends React.Component{
 	}
 
 	remove = () => {
-		axios.delete(`http://localhost:5000/api/order/${this.props.match.params.id}`).then(() => {
+		axios.delete(`${ROOT_URL}/api/order/${this.props.match.params.id}`).then(() => {
 			this.props.history.push('/orders');
 		})
 	}

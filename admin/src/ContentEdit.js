@@ -3,6 +3,7 @@ import axios from 'axios';
 import moment from 'moment';
 import {  Link } from "react-router-dom";
 import Editor from 'react-medium-editor';
+import { ROOT_URL } from './config';
 
 require('medium-editor/dist/css/medium-editor.css');
 require('medium-editor/dist/css/themes/default.css');
@@ -14,7 +15,7 @@ class ContentEdit extends React.Component{
 	}
 
 	componentDidMount() {
-	 	axios.get(`http://localhost:5000/api/contents/${this.props.match.params.id}`)
+	 	axios.get(`${ROOT_URL}/api/contents/${this.props.match.params.id}`)
 			.then(responce => responce.data)
 			.then(content => {
 				this.setState({ content, text: content.value })
@@ -23,7 +24,7 @@ class ContentEdit extends React.Component{
 	save = () => {
 		const { text } = this.state;
 
-		axios.put(`http://localhost:5000/api/contents/${this.props.match.params.id}`, { value: text })
+		axios.put(`${ROOT_URL}/api/contents/${this.props.match.params.id}`, { value: text })
 			.then(responce => responce.data)
 			.then(content => {
 				this.props.history.push('/contents');

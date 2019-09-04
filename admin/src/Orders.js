@@ -2,13 +2,14 @@ import React from 'react';
 import axios from 'axios';
 import moment from 'moment';
 import {  Link } from "react-router-dom";
+import { ROOT_URL } from './config';
 
 class Orders extends React.Component{
 	state = {
 		orders: []
 	}
 	load = () => {
-		axios.get('http://localhost:5000/api/orders')
+		axios.get(ROOT_URL + '/api/orders')
 			.then(responce => responce.data)
 			.then(orders => {
 				this.setState({ orders })
@@ -19,7 +20,7 @@ class Orders extends React.Component{
 		this.load();
 	}
 	remove = (id) => {
-		axios.delete(`http://localhost:5000/api/order/${id}`).then(this.load)
+		axios.delete(`${ROOT_URL}/api/order/${id}`).then(this.load)
 	}
 	render() {
 		const { orders } = this.state;

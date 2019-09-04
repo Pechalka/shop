@@ -1,6 +1,9 @@
 import React from 'react';
 import axios from 'axios';
 
+import { ROOT_URL } from './config';
+
+
 class Products extends React.Component{
 	state = { 
 		products: [],
@@ -9,7 +12,7 @@ class Products extends React.Component{
 		categoriesMap: {}
 	};
 	loadProducts = () => {
-		axios.get('http://localhost:5000/api/products')
+		axios.get(ROOT_URL + '/api/products')
 			.then(responce => responce.data)
 			.then(products => {
 				this.setState({ products })
@@ -17,7 +20,7 @@ class Products extends React.Component{
 
 	}
 	loadCategories = () => {
-		axios.get('http://localhost:5000/api/category')
+		axios.get(ROOT_URL + '/api/category')
 			.then(responce => responce.data)
 			.then(categories => {
 				const categoriesMap = categories.reduce((res, item ) =>({ ...res, [item.id]: item }), {});
@@ -34,7 +37,7 @@ class Products extends React.Component{
       let formData = new FormData();
       formData.append('selectedFile', selectedFile);
 
-      axios.post('http://localhost:5000/upload', formData)
+      axios.post(ROOT_URL + '/upload', formData)
       	.then(response => response.data)
         .then((data) => {
 			const product = {
@@ -49,14 +52,14 @@ class Products extends React.Component{
 			this.refs.name.value = '';
 			this.refs.descrition.value = '';
 
-			axios.post('http://localhost:5000/api/products', product)
+			axios.post(ROOT_URL + '/api/products', product)
 				.then(this.loadProducts)
 
         });
 	}
 
 	remove = (product) => {
-		axios.delete('http://localhost:5000/api/products/' + product.id, product)
+		axios.delete(ROOT_URL + '/api/products/' + product.id, product)
 			.then(this.loadProducts)
 
 	}
@@ -70,11 +73,11 @@ class Products extends React.Component{
 		const key = this.refs.category_key.value;
 		this.refs.category_name.value = '';
 		this.refs.category_key.value = '';
-		axios.post('http://localhost:5000/api/category', { name, key })
+		axios.post(ROOT_URL + '/api/category', { name, key })
 				.then(this.loadCategories)
 	}
 	removeCategory = (id) => {
-		axios.delete('http://localhost:5000/api/category/' + id)
+		axios.delete(ROOT_URL + '/api/category/' + id)
 			.then(this.loadCategories)
 	}
 	categoryName = (product) => {
@@ -90,7 +93,7 @@ class Products extends React.Component{
 
 		const rows = products.map(product => (
 			<tr key={product.id}>
-				<td><img width={50} src={`http://localhost:5000/${product.image}`} /></td>
+				<td><img width={50} src={`${ROOT_URL}/${product.image}`} /></td>
 				<td>{product.name}</td>
 				<td>{product.price}</td>
 				<td>{product.descrition}</td>

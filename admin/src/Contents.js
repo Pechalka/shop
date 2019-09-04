@@ -2,13 +2,14 @@ import React from 'react';
 import axios from 'axios';
 import moment from 'moment';
 import {  Link } from "react-router-dom";
+import { ROOT_URL } from './config';
 
 class Contents extends React.Component{
 	state = {
 		contents: []
 	}
 	load = () => {
-		axios.get('http://localhost:5000/api/contents')
+		axios.get(ROOT_URL + '/api/contents')
 			.then(responce => responce.data)
 			.then(contents => {
 				this.setState({ contents })

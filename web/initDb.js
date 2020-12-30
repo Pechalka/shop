@@ -5,23 +5,23 @@ const fs = require('fs');
  fs.unlinkSync('./shop.db')
 
 db.openConnectAndCreateDb().then(() => 
-	db.createCategory({ name: 'Пицца', key: 'pizza'})
+	db.categories.create({ name: 'Пицца', key: 'pizza'})
 ).then(pizza => Promise.all([
-	db.createProduct({
+	db.products.create({
 		name: 'Буженина и шампиньоны',
 		descrition: 'пицца-соус, буженина (свинина), свежий болгарский перец, свежие шампиньоны, свежий лук, сыр моцарелла, базилик',
 		price: 16.9,
 		image: 'uploads/f547cbdd-f0d2-47b4-8782-1161eed1010a.jpg',
 		category_id: pizza
 	}),
-	db.createProduct({
+	db.products.create({
 		name: 'Буженина и сливочный сыр',
 		descrition: 'пицца-соус, буженина (свинина), свежие томаты, сливочный сыр, свежий лук, сыр моцарелла, базилик',
 		price: 18.9,
 		image: 'uploads/f547cbdd-f0d2-47b4-8782-1161eed1010a.jpg',
 		category_id: pizza
 	}),
-	db.createProduct({
+	db.products.create({
 		name: 'Гавайская',
 		descrition: 'сырный соус, ветчина, филе цыпленка, ананасы, сыр моцарелла, базилик',
 		price: 16.9,
@@ -29,30 +29,30 @@ db.openConnectAndCreateDb().then(() =>
 		category_id: pizza
 	})
 ])).then(() => 
-	db.createCategory({ name: 'Напитки', key: 'drinks'})
+	db.categories.create({ name: 'Напитки', key: 'drinks'})
 ).then(drinks => Promise.all([
-	db.createProduct({
+	db.products.create({
 		name: 'Coca-Cola',
 		descrition: '1 л',
 		price: 2.7,
 		image: 'uploads/f547cbdd-f0d2-47b4-8782-1161eed1010a.jpg',
 		category_id: drinks
 	}),
-	db.createProduct({
+	db.products.create({
 		name: 'Sprite',
 		descrition: '0.5 л',
 		price: 1.9,
 		image: 'uploads/f547cbdd-f0d2-47b4-8782-1161eed1010a.jpg',
 		category_id: drinks
 	}),
-	db.createProduct({
+	db.products.create({
 		name: 'Сок RICH Яблоко',
 		descrition: '1 л',
 		price: 4,
 		image: 'uploads/f547cbdd-f0d2-47b4-8782-1161eed1010a.jpg',
 		category_id: drinks
 	}),
-	db.createProduct({
+	db.products.create({
 		name: 'Burn',
 		descrition: '0.25 л',
 		price: 3,
@@ -60,9 +60,9 @@ db.openConnectAndCreateDb().then(() =>
 		category_id: drinks
 	})
 ])).then(() => 
-	db.createCategory({ name: 'Десерты', key: 'desserts'})
+	db.categories.create({ name: 'Десерты', key: 'desserts'})
 ).then(desserts => Promise.all([
-	db.createProduct({
+	db.products.create({
 		name: 'Чизкейк',
 		descrition: '110 г',
 		price: 5.5,
@@ -71,7 +71,7 @@ db.openConnectAndCreateDb().then(() =>
 	})
 ])).then(() => {
 	return Promise.all([
-		db.createContent({
+		db.contents.create({
 			key: 'vacancy',
 			value: (`<div>
 				<h1>Вакансии</h1>
@@ -161,7 +161,7 @@ db.openConnectAndCreateDb().then(() =>
 
 			</div>`).replace(/\t/g, '').replace(/\n/g, '')
 		}),
-		db.createContent({
+		db.contents.create({
 			key: 'contacts_top',
 			value: (`
 <h1>Контакты</h1>
@@ -177,7 +177,7 @@ db.openConnectAndCreateDb().then(() =>
 <p>При заказе на самовывоз онлайн или через колл-центр действует правило "вовремя или пицца бесплатно". Если заказ не будет готов ко времени, указанному при оформлении заказа, то одну пиццу или другое блюдо с наименьшей ценой из своего заказа Клиент получает бесплатно.</p>
 			`).replace(/\t/g, '').replace(/\n/g, '')
 		}),
-		db.createContent({
+		db.contents.create({
 			key: 'contacts_bottom',
 			value: (`
 <p>Все адреса Фрунзенского, Московского, Первомайского, Ленинского, Советского, Центрального, Заводского (кроме микрорайона Сосны) и Партизанского районов города Минска, а также часть Октябрьского района.</p>
@@ -194,7 +194,7 @@ db.openConnectAndCreateDb().then(() =>
 <p><strong>Замечания и предложения направляйте по адресу v@spz.by</strong></p>
 			`).replace(/\t/g, '').replace(/\n/g, '')
 		}),
-		db.createContent({
+		db.contents.create({
 			key: 'order_created',
 			value: (`
 	<h1>Заказ принят</h1>
